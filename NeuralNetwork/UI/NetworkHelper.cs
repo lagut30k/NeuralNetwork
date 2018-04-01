@@ -71,6 +71,10 @@ namespace NeuralNetwork.UI
         private static void ApplyNeuron(TreeNode neuronNode, Neuron neuron)
         {
             neuronNode.Text = $@"Neuron: {neuron.Value}";
+            if (neuron is InputNeuron)
+            {
+                return;
+            }
             if (neuronNode.Nodes.Count == neuron.Weights.Count + 2)
             {
                 neuronNode.Nodes[0].Text = $@"Bias: {neuron.Bias}";
@@ -93,10 +97,10 @@ namespace NeuralNetwork.UI
 
         public static void ToPictureBox(PictureBox p, Network nn, int X, int Y)
         {
-            int neuronWidth = 30;
+            int neuronWidth = 40;
             int neuronDistance = 50;
             int layerDistance = 50;
-            int fontSize = 8;
+            int fontSize = 10;
 
             Bitmap b = new Bitmap(p.Width, p.Height);
             Graphics g = Graphics.FromImage(b);
@@ -122,7 +126,7 @@ namespace NeuralNetwork.UI
 
                     g.FillEllipse(Brushes.WhiteSmoke, x, y, neuronWidth, neuronWidth);
                     g.DrawEllipse(Pens.Gray, x, y, neuronWidth, neuronWidth);
-                    g.DrawString(neuron.Value.ToString("0.00"), new Font("Arial", fontSize), Brushes.Black, x + 2, y + (neuronWidth / 2) - 5);
+                    g.DrawString(neuron.Value.ToString("0.00"), new Font("Arial", fontSize), Brushes.Black, x + 5, y + (neuronWidth / 2) - 6);
 
                     x += neuronDistance;
                 }

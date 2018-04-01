@@ -18,7 +18,7 @@ namespace NeuralNetwork.Engine.Neurons
         public override void CalcDelta()
         {
             throw new NotImplementedException();
-            Delta = Network.Grad(Value) * Layer.NextLayer.Neurons.Sum(x => x.Weights[index] * x.Delta);
+            //Delta = Network.Grad(Value) * Layer.NextLayer.Neurons.Sum(x => x.Weights[index] * x.Delta);
         }
     }
 }

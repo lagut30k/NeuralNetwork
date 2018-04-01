@@ -7,17 +7,19 @@ namespace NeuralNetwork.Engine.Layers
 {
     public class InputLayer : Layer
     {
-        public InputLayer(int thisLayerSize)
+        public InputLayer(LayerHyperParameters layerHyperParameters, Network network) : base(layerHyperParameters, network)
         {
-            Neurons = Enumerable.Range(0, thisLayerSize)
-                .Select(i => new InputNeuron(this, i) as Neuron)
-                .ToList();
         }
 
         public void AssignInput(List<double> input)
         {
-            Neurons.Zip(input, (neuron, d) => neuron.Value = d).ToList();
+            foreach (var (neuron, d) in Neurons.Zip(input, (neuron, d) => (neuron, d)))
+            {
+                neuron.Value = d;
+            }
         }
+
+        protected override Neuron NeuronFactory(int i) => new InputNeuron(this, i);
 
         public override void Run()
         {
@@ -26,10 +28,11 @@ namespace NeuralNetwork.Engine.Layers
 
         public override void CalcDelta()
         {
-            foreach (var neuron in Neurons)
-            {
-                neuron.CalcDelta();
-            }
+            throw new NotImplementedException();
+            //foreach (var neuron in Neurons)
+            //{
+            //    neuron.CalcDelta();
+            //}
         }
     }
 }

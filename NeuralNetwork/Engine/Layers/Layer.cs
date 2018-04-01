@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using NeuralNetwork.Engine.Neurons;
 
 namespace NeuralNetwork.Engine.Layers
@@ -6,16 +8,52 @@ namespace NeuralNetwork.Engine.Layers
     public abstract class Layer
     {
         public List<Neuron> Neurons { get; set; }
-
-        public virtual Layer NextLayer { get; set; }
-
-        public virtual Layer PreviousLayer { get; protected set; }
-
+        
+        public bool HasBias { get; }
+        
         public int Size => Neurons.Count;
 
-        public abstract void Run();
+        public Layer PreviousLayer { get; }
 
-        public abstract void CalcDelta();
+        public Layer NextLayer { get; set; }
+
+        public Network Network { get; }
+
+        protected abstract Neuron NeuronFactory(int i);
+
+        protected Layer(LayerHyperParameters layerHyperParameters, Network network, Layer previousLayer = null)
+        {
+            Network = network;
+            HasBias = layerHyperParameters.HasBias;
+            PreviousLayer = previousLayer;
+            Neurons = Enumerable.Range(0, layerHyperParameters.NeuronsCount)
+                .Select(NeuronFactory)
+                .ToList();
+        }
+
+        public virtual void Run()
+        {
+            Parallel.ForEach(Neurons, neuron =>
+            {
+                neuron.CalcValue();
+            });
+            //foreach (var neuron in Neurons)
+            //{
+            //    neuron.CalcValue();
+            //}
+        }
+
+        public virtual void CalcDelta()
+        {
+            Parallel.ForEach(Neurons, neuron =>
+            {
+                neuron.CalcDelta();
+            });
+            //foreach (var neuron in Neurons)
+            //{
+            //    neuron.CalcDelta();
+            //}
+        }
 
         public void UpdateWeights()
         {

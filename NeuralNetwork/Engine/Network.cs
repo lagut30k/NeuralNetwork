@@ -10,33 +10,31 @@ namespace NeuralNetwork.Engine
     {
         public List<Layer> Layers { get; set; }
 
-        public static double LearningRate { get; set; }
+        public double LearningRate { get; set; }
 
         private OutputLayer OutputLayer => (OutputLayer) Layers.Last();
 
         private InputLayer InputLayer => (InputLayer) Layers.First();
 
-        public static double Moment { get; set; }
-
-        public int LayerCount => Layers.Count;
+        public double Moment { get; set; }
 
         public static Random R = new Random((int)DateTime.Now.Ticks);
 
-        public Network(double learningRate, double moment, int[] layers)
+        public Network(double learningRate, double moment, List<LayerHyperParameters> layersHyperParameters)
         {
-            if (layers.Length < 2) return;
+            if (layersHyperParameters.Count < 2) return;
 
             LearningRate = learningRate;
             Moment = moment;
-            var inputLayer = new InputLayer(layers.First());
-            Layers = new List<Layer>(layers.Length) { inputLayer };
-            foreach (var layerSize in layers.Skip(1).Take(layers.Length - 2))
+            var inputLayer = new InputLayer(layersHyperParameters.First(), this);
+            Layers = new List<Layer>(layersHyperParameters.Count) { inputLayer };
+            foreach (var layer in layersHyperParameters.Skip(1).Take(layersHyperParameters.Count - 2))
             {
                 var prev = Layers.Last();
-                Layers.Add(new HiddenLayer(layerSize, prev));
+                Layers.Add(new HiddenLayer(layer, this, prev));
                 prev.NextLayer = Layers.Last();
             }
-            var outputLayer = new OutputLayer(layers.Last(), Layers.Last());
+            var outputLayer = new OutputLayer(layersHyperParameters.Last(), this, Layers.Last());
             Layers.Last().NextLayer = outputLayer;
             Layers.Add(outputLayer);
         }
@@ -45,7 +43,7 @@ namespace NeuralNetwork.Engine
             : this(
                 hyperParameters.LearningRate, 
                 hyperParameters.Moment,
-                hyperParameters.LayersHyperParameters.Select(x => x.NeuronsCount).ToArray())
+                hyperParameters.LayersHyperParameters)
         {
         }
 

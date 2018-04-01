@@ -1,100 +1,93 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Windows.Forms;
 using NeuralNetwork.Engine;
+using NeuralNetwork.UI.Options;
 
 namespace NeuralNetwork.UI.Drivers
 {
-    public abstract class Driver
+    public class Driver
     {
-        protected Driver(double learingRate, double moment, int trainLoops)
+        private readonly TextBox learningRateTextBox;
+        private readonly TextBox trainLoopsTextBox;
+        private readonly TrainData trainData;
+        private readonly LayersData layersData;
+
+        public event EventHandler ReadyToRun;
+
+        public Driver(HyperParameters networkHyperParameters)
         {
-            TrainLoops = trainLoops;
-            Network = new Network(learingRate, moment, Layers);
+            Network = new Network(networkHyperParameters);
         }
 
-        protected abstract int[] Layers { get; }
-
-        public static Driver Init<T>(double learingRate, double moment, int trainLoops) where T : Driver
+        public Driver(
+            TextBox learningRateTextBox, 
+            TextBox trainLoopsTextBox, 
+            TrainData trainData, 
+            LayersData layersData)
         {
-            return (Driver)Activator.CreateInstance(typeof(T), learingRate, moment, trainLoops);
+            this.learningRateTextBox = learningRateTextBox;
+            this.trainLoopsTextBox = trainLoopsTextBox;
+            this.trainData = trainData;
+            this.layersData = layersData;
+            
+            ResetNetwork();
         }
 
-        public virtual Network Network { get; }
-
-        private int TrainLoops { get; }
-
-        public abstract void TrainInternal();
-
-        public virtual void Train()
+        public void ResetNetwork()
         {
-            for (int i = 0; i < TrainLoops; i++)
+            Network = new Network(GetHyperParameters());
+        }
+
+        private void UpdateNetworkHyperParameters()
+        {
+            var parameters = GetHyperParameters();
+            Moment = parameters.Moment;
+            LearningRate = parameters.LearningRate;
+        }
+
+        private HyperParameters GetHyperParameters()
+        {
+            return new HyperParameters
             {
-                TrainInternal();
+                LearningRate = double.TryParse(learningRateTextBox.Text, out var lr) ? lr : 0.07,
+                Moment = 1,
+                LayersHyperParameters = layersData.Data
+            };
+        }
+
+        public Network Network { get; private set; }
+
+        public double Moment
+        {
+            get => Network.Moment;
+            set => Network.Moment = value;
+        }
+
+        public double LearningRate
+        {
+            get => Network.LearningRate;
+            set => Network.LearningRate = value;
+        }
+
+        public List<(List<double>, List<double>)> TrainData { get; set; }
+
+        public void Train()
+        {
+            var trainLoops = int.TryParse(trainLoopsTextBox.Text, out var tr) ? tr : 100000;
+            var data = trainData.ToNetworkFormat();
+            UpdateNetworkHyperParameters();
+            for (int i = 0; i < trainLoops; i++)
+            {
+                foreach (var (input, output) in data)
+                {
+                    Network.Train(input, output);
+                }
+                if (i % 100 == 0)
+                {
+                    ReadyToRun?.Invoke(this, null);
+                }
             }
-        }
-    }
-
-    class XorTwoOutputDriver : Driver
-    {
-        public XorTwoOutputDriver(double learingRate, double moment, int trainLoops) : base(learingRate, moment, trainLoops)
-        { }
-
-        protected override int[] Layers { get; } = { 2, 2, 2 };
-
-        public override void TrainInternal()
-        {
-            Network.Train(new List<double> { 0, 0 }, new List<double> { 1, 0 });
-            Network.Train(new List<double> { 0, 1 }, new List<double> { 0, 1 });
-            Network.Train(new List<double> { 1, 0 }, new List<double> { 0, 1 });
-            Network.Train(new List<double> { 1.5, 1.5 }, new List<double> { 1, 0 });
-        }
-    }
-
-    class XorOneOutputDriver : Driver
-    {
-        public XorOneOutputDriver(double learingRate, double moment, int trainLoops) : base(learingRate, moment, trainLoops)
-        { }
-
-        protected override int[] Layers { get; } = { 2, 2, 1 };
-
-        public override void TrainInternal()
-        {
-            Network.Train(new List<double> { 0, 0 }, new List<double> { 0 });
-            Network.Train(new List<double> { 0, 1 }, new List<double> { 1 });
-            Network.Train(new List<double> { 1, 0 }, new List<double> { 1 });
-            Network.Train(new List<double> { 1, 1 }, new List<double> { 0 });
-        }
-    }
-
-    class AndOneOutputDriver : Driver
-    {
-        public AndOneOutputDriver(double learingRate, double moment, int trainLoops) : base(learingRate, moment, trainLoops)
-        { }
-
-        protected override int[] Layers { get; } = { 2, 2, 1 };
-
-        public override void TrainInternal()
-        {
-            Network.Train(new List<double> { 0, 0 }, new List<double> { 0 });
-            Network.Train(new List<double> { 0, 1 }, new List<double> { 0 });
-            Network.Train(new List<double> { 1, 0 }, new List<double> { 0 });
-            Network.Train(new List<double> { 1, 1 }, new List<double> { 1 });
-        }
-    }
-
-    class AndTwoOutputDriver : Driver
-    {
-        public AndTwoOutputDriver(double learingRate, double moment, int trainLoops) : base(learingRate, moment, trainLoops)
-        { }
-
-        protected override int[] Layers { get; } = { 2, 2, 2 };
-
-        public override void TrainInternal()
-        {
-            Network.Train(new List<double> { 0, 0 }, new List<double> { 1, 0 });
-            Network.Train(new List<double> { 0, 1 }, new List<double> { 1, 0 });
-            Network.Train(new List<double> { 1, 0 }, new List<double> { 1, 0 });
-            Network.Train(new List<double> { 1, 1 }, new List<double> { 0, 1 });
         }
     }
 }

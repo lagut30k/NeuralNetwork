@@ -13,33 +13,41 @@ namespace NeuralNetwork.Engine.Neurons
         public List<double> Weights { get; set; } = new List<double>();
 
         public double Bias { get; set; }
-
+        
         public double Delta { get; set; }
         
         public double Value { get; set; }
-
-        public int WeightsCount => Weights.Count;
 
         protected Neuron(Layer layer, int index)
         {
             this.index = index;
             Layer = layer;
+            Weights = Enumerable.Range(0, layer.PreviousLayer?.Size ?? 0)
+                .Select(_ => Network.R.NextDouble())
+                .ToList();
         }
 
         public virtual void CalcValue()
         {
             var prevLayerValues = Layer.PreviousLayer.Neurons.Select(n => n.Value);
-            var totalInput = Weights.Zip(prevLayerValues, (w, input) => w * input).Sum() + Bias;
+            var totalInput = Weights.Zip(prevLayerValues, (w, input) => w * input).Sum() + (Layer.HasBias ? Bias : 0);
             Value = Network.Sigmoid(totalInput);
         }
 
-        public abstract void CalcDelta();
+        public virtual void CalcDelta()
+        {
+            Delta = Network.Grad(Value) * Layer.NextLayer.Neurons.Sum(x => x.Weights[index] * x.Delta);
+        }
 
         public void UpdateWeights()
         {
-            Bias += Network.LearningRate * Delta;
+            var learningRate = Layer.Network.LearningRate;
+            if (Layer.HasBias)
+            {
+                Bias += learningRate* Delta;
+            }
             for (int k = 0; k < Weights.Count; k++)
-                Weights[k] += Layer.PreviousLayer.Neurons[k].Value * Network.LearningRate * Delta;
+                Weights[k] += Layer.PreviousLayer.Neurons[k].Value * learningRate * Delta;
         }
     }
 }

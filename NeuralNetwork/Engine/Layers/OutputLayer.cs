@@ -1,28 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using NeuralNetwork.Engine.Neurons;
 
 namespace NeuralNetwork.Engine.Layers
 {
     public class OutputLayer : Layer
     {
-        public OutputLayer(int thisLayerSize, Layer prevLayer)
+        public OutputLayer(LayerHyperParameters layerHyperParameters, Network network, Layer prevLayer)
+            : base(layerHyperParameters, network, prevLayer)
         {
-            PreviousLayer = prevLayer;
-            Neurons = Enumerable.Range(0, thisLayerSize)
-                .Select(i => new OutputNeuron(this, i) as Neuron)
-                .ToList();
         }
 
-        public override void Run()
-        {
-            Parallel.ForEach(Neurons, neuron1 =>
-            {
-                neuron1.CalcValue();
-            });
-        }
+        protected override Neuron NeuronFactory(int i) => new OutputNeuron(this, i);
 
         public override void CalcDelta()
         {
