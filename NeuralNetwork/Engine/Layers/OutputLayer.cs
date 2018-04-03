@@ -10,6 +10,7 @@ namespace NeuralNetwork.Engine.Layers
         public OutputLayer(LayerHyperParameters layerHyperParameters, Network network, Layer prevLayer)
             : base(layerHyperParameters, network, prevLayer)
         {
+            InitNeuronsWeights();
         }
 
         protected override Neuron NeuronFactory(int i) => new OutputNeuron(this, i);

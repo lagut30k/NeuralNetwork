@@ -22,9 +22,7 @@ namespace NeuralNetwork.Engine.Neurons
         {
             this.index = index;
             Layer = layer;
-            Weights = Enumerable.Range(0, layer.PreviousLayer?.Size ?? 0)
-                .Select(_ => Network.R.NextDouble())
-                .ToList();
+            Weights = Enumerable.Repeat(0D, layer.PreviousLayer?.Size ?? 0).ToList();
         }
 
         public virtual void CalcValue()
@@ -48,6 +46,16 @@ namespace NeuralNetwork.Engine.Neurons
             }
             for (int k = 0; k < Weights.Count; k++)
                 Weights[k] += Layer.PreviousLayer.Neurons[k].Value * learningRate * Delta;
+        }
+
+        public void InitWeights()
+        {
+            var prevLayerSize = Layer.PreviousLayer?.Size ?? 0;
+            var nextLayerSize = Layer.PreviousLayer?.Size ?? 0;
+            for (int i = Weights.Count - 1; i >= 0; i--)
+            {
+                Weights[i] = Network.GetInitWeight(prevLayerSize, nextLayerSize);
+            }
         }
     }
 }

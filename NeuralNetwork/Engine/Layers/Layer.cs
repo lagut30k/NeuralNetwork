@@ -7,6 +7,8 @@ namespace NeuralNetwork.Engine.Layers
 {
     public abstract class Layer
     {
+        private Layer nextLayer;
+
         public List<Neuron> Neurons { get; set; }
         
         public bool HasBias { get; }
@@ -15,11 +17,27 @@ namespace NeuralNetwork.Engine.Layers
 
         public Layer PreviousLayer { get; }
 
-        public Layer NextLayer { get; set; }
+        public Layer NextLayer
+        {
+            get => nextLayer;
+            set
+            {
+                nextLayer = value;
+                InitNeuronsWeights();
+            }
+        }
 
         public Network Network { get; }
 
         protected abstract Neuron NeuronFactory(int i);
+
+        protected void InitNeuronsWeights()
+        {
+            foreach (var neuron in Neurons)
+            {
+                neuron.InitWeights();
+            }
+        }
 
         protected Layer(LayerHyperParameters layerHyperParameters, Network network, Layer previousLayer = null)
         {
@@ -29,6 +47,11 @@ namespace NeuralNetwork.Engine.Layers
             Neurons = Enumerable.Range(0, layerHyperParameters.NeuronsCount)
                 .Select(NeuronFactory)
                 .ToList();
+
+            if (previousLayer != null)
+            {
+                PreviousLayer.NextLayer = this;
+            }
         }
 
         public virtual void Run()
