@@ -10,27 +10,26 @@ namespace NeuralNetwork.UI.Drivers
     {
         private readonly TextBox learningRateTextBox;
         private readonly TextBox trainLoopsTextBox;
+        private readonly TextBox dropoutTextBox;
         private readonly TrainData trainData;
         private readonly LayersData layersData;
 
         public event EventHandler ReadyToRun;
 
-        public Driver(HyperParameters networkHyperParameters)
+        public Driver(HyperParameters networkHyperParameters, TextBox dropoutTextBox)
         {
+            this.dropoutTextBox = dropoutTextBox;
             Network = new Network(networkHyperParameters);
         }
 
-        public Driver(
-            TextBox learningRateTextBox, 
-            TextBox trainLoopsTextBox, 
-            TrainData trainData, 
-            LayersData layersData)
+        public Driver(TextBox learningRateTextBox, TextBox trainLoopsTextBox, TextBox dropoutTextBox, TrainData trainData, LayersData layersData)
         {
             this.learningRateTextBox = learningRateTextBox;
             this.trainLoopsTextBox = trainLoopsTextBox;
             this.trainData = trainData;
             this.layersData = layersData;
-            
+            this.dropoutTextBox = dropoutTextBox;
+
             ResetNetwork();
         }
 
@@ -44,6 +43,7 @@ namespace NeuralNetwork.UI.Drivers
             var parameters = GetHyperParameters();
             Moment = parameters.Moment;
             LearningRate = parameters.LearningRate;
+            Network.DropoutProbability = double.TryParse(dropoutTextBox.Text, out var lr) ? lr : 0;
         }
 
         private HyperParameters GetHyperParameters()

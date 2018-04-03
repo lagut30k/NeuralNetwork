@@ -8,13 +8,15 @@ namespace NeuralNetwork.Engine
 {
     public class Network
     {
+        private OutputLayer OutputLayer => (OutputLayer) Layers.Last();
+
+        private InputLayer InputLayer => (InputLayer) Layers.First();
+
         public List<Layer> Layers { get; set; }
 
         public double LearningRate { get; set; }
 
-        private OutputLayer OutputLayer => (OutputLayer) Layers.Last();
-
-        private InputLayer InputLayer => (InputLayer) Layers.First();
+        public double DropoutProbability { get; set; } = 0.3D;
 
         public double Moment { get; set; }
 
@@ -54,8 +56,6 @@ namespace NeuralNetwork.Engine
         {
         }
 
-        
-
         public List<double> Run(List<double> input)
         {
             if (input.Count != Layers[0].Size) return null;
@@ -68,9 +68,27 @@ namespace NeuralNetwork.Engine
             return OutputLayer.GetResult();
         }
 
+        private void Dropout()
+        {
+            foreach (var hiddenLayer in Layers.OfType<HiddenLayer>())
+            {
+                hiddenLayer.Dropout();
+            }
+        }
+
+        private void ClearDropout()
+        {
+            foreach (var hiddenLayer in Layers.OfType<HiddenLayer>())
+            {
+                hiddenLayer.ClearDropout();
+            }
+        }
+
         public bool Train(List<double> input, List<double> idealOutput)
         {
             if ((input.Count != Layers.First().Size) || (idealOutput.Count != Layers.Last().Size)) return false;
+
+            Dropout();
 
             Run(input);
 
@@ -84,6 +102,8 @@ namespace NeuralNetwork.Engine
             {
                 layer.UpdateWeights();
             }
+
+            ClearDropout();
             return true;
         }
     }

@@ -44,6 +44,8 @@
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.pictureBox3 = new System.Windows.Forms.PictureBox();
             this.pictureBox4 = new System.Windows.Forms.PictureBox();
+            this.updateTreeCheckBox = new System.Windows.Forms.CheckBox();
+            this.dropOutTextBox = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trainDataGridView)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layerDataGridView)).BeginInit();
@@ -184,11 +186,32 @@
             this.pictureBox4.TabIndex = 18;
             this.pictureBox4.TabStop = false;
             // 
+            // updateTreeCheckBox
+            // 
+            this.updateTreeCheckBox.AutoSize = true;
+            this.updateTreeCheckBox.Checked = true;
+            this.updateTreeCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.updateTreeCheckBox.Location = new System.Drawing.Point(13, 188);
+            this.updateTreeCheckBox.Name = "updateTreeCheckBox";
+            this.updateTreeCheckBox.Size = new System.Drawing.Size(80, 17);
+            this.updateTreeCheckBox.TabIndex = 19;
+            this.updateTreeCheckBox.Text = "update tree";
+            this.updateTreeCheckBox.UseVisualStyleBackColor = true;
+            // 
+            // dropOutTextBox
+            // 
+            this.dropOutTextBox.Location = new System.Drawing.Point(372, 94);
+            this.dropOutTextBox.Name = "dropOutTextBox";
+            this.dropOutTextBox.Size = new System.Drawing.Size(100, 20);
+            this.dropOutTextBox.TabIndex = 20;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1294, 866);
+            this.Controls.Add(this.dropOutTextBox);
+            this.Controls.Add(this.updateTreeCheckBox);
             this.Controls.Add(this.pictureBox4);
             this.Controls.Add(this.pictureBox3);
             this.Controls.Add(this.pictureBox2);
@@ -237,6 +260,8 @@
         private System.Windows.Forms.PictureBox pictureBox2;
         private System.Windows.Forms.PictureBox pictureBox3;
         private System.Windows.Forms.PictureBox pictureBox4;
+        private System.Windows.Forms.CheckBox updateTreeCheckBox;
+        private System.Windows.Forms.TextBox dropOutTextBox;
     }
 }
 

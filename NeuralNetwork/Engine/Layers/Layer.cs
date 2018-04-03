@@ -10,9 +10,9 @@ namespace NeuralNetwork.Engine.Layers
         private Layer nextLayer;
 
         public List<Neuron> Neurons { get; set; }
-        
+
         public bool HasBias { get; }
-        
+
         public int Size => Neurons.Count;
 
         public Layer PreviousLayer { get; }
@@ -51,6 +51,25 @@ namespace NeuralNetwork.Engine.Layers
             if (previousLayer != null)
             {
                 PreviousLayer.NextLayer = this;
+            }
+        }
+
+        public void Dropout()
+        {
+            foreach (var neuron in Neurons)
+            {
+                if (Network.R.NextDouble() < Network.DropoutProbability)
+                {
+                    neuron.Dropped = true;
+                }
+            }
+        }
+
+        public void ClearDropout()
+        {
+            foreach (var neuron in Neurons)
+            {
+                neuron.Dropped = false;
             }
         }
 

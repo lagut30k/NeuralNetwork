@@ -12,7 +12,7 @@ namespace NeuralNetwork.UI.Options
         public List<LayerHyperParameters> Data { get; } = new List<LayerHyperParameters>
         {
             new LayerHyperParameters {NeuronsCount = 2, HasBias = false},
-            new LayerHyperParameters {NeuronsCount = 2, HasBias = true},
+            new LayerHyperParameters {NeuronsCount = 4, HasBias = true},
             new LayerHyperParameters {NeuronsCount = 1, HasBias = true},
         };
 

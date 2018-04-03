@@ -1,4 +1,5 @@
-﻿using System.Drawing;
+﻿using System;
+using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using NeuralNetwork.Engine;
@@ -11,6 +12,17 @@ namespace NeuralNetwork.UI
     {
         public static void ToTreeView(TreeView t, Network nn)
         {
+            if (t.InvokeRequired)
+            {
+                t.Invoke(new Action<TreeView, Network>(ToTreeViewInternal), t, nn);
+                return;
+            }
+            ToTreeViewInternal(t, nn);
+        }
+
+        private static void ToTreeViewInternal(TreeView t, Network nn)
+        {
+            t.BeginUpdate();
             TreeNode root;
             if (t.Nodes.Count == 1)
             {
@@ -23,6 +35,7 @@ namespace NeuralNetwork.UI
                 t.Nodes.Add(root);
             }
             ApplyRoot(root, nn);
+            t.EndUpdate();
         }
 
         private static void ApplyRoot(TreeNode rootNode, Network network)
@@ -123,11 +136,12 @@ namespace NeuralNetwork.UI
                     //{
                     //    // TO DO: optionally draw dendrites between neurons 
                     //};
-
-                    g.FillEllipse(Brushes.WhiteSmoke, x, y, neuronWidth, neuronWidth);
-                    g.DrawEllipse(Pens.Gray, x, y, neuronWidth, neuronWidth);
-                    g.DrawString(neuron.Value.ToString("0.00"), new Font("Arial", fontSize), Brushes.Black, x + 5, y + (neuronWidth / 2) - 6);
-
+                    if (x > -20 && x < p.Width + 20)
+                    {
+                        g.FillEllipse(Brushes.WhiteSmoke, x, y, neuronWidth, neuronWidth);
+                        g.DrawEllipse(Pens.Gray, x, y, neuronWidth, neuronWidth);
+                        g.DrawString(neuron.Value.ToString("0.00"), new Font("Arial", fontSize), Brushes.Black, x + 5, y + (neuronWidth / 2) - 6);
+                    }
                     x += neuronDistance;
                 }
 

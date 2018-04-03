@@ -36,7 +36,7 @@ namespace NeuralNetwork
 
             driverComboBox.DisplayMember = "Text";
             TrainData = new TrainData(trainDataGridView, driverComboBox, LayersData);
-            Driver = new Driver(learningRateTextBox, trainLoopsTextBox, TrainData, LayersData);
+            Driver = new Driver(learningRateTextBox, trainLoopsTextBox, dropOutTextBox, TrainData, LayersData);
             Driver.ReadyToRun += (sender, args) => Test();
         }
 
@@ -46,8 +46,9 @@ namespace NeuralNetwork
             rightInputTextBox.TextChanged += (o, args) => RunForward();
             layerDataGridView.CellValueChanged += (o, args) => ResetNetworkAndRun();
 
-            learningRateTextBox.Text = 0.07.ToString(CultureInfo.CurrentCulture);
-            trainLoopsTextBox.Text = 10000.ToString(CultureInfo.CurrentCulture);
+            learningRateTextBox.Text = 0.7.ToString(CultureInfo.CurrentCulture);
+            trainLoopsTextBox.Text = 1000.ToString(CultureInfo.CurrentCulture);
+            dropOutTextBox.Text = 0.1.ToString(CultureInfo.CurrentCulture);
 
             driverComboBox.SelectedValueChanged += (o, args) => TrainData.InitTrainDataGridView(); ;
 
@@ -61,7 +62,10 @@ namespace NeuralNetwork
             var left = double.TryParse(leftInputTextBox.Text, out var res) ? res : 0;
             var right = double.TryParse(rightInputTextBox.Text, out res) ? res : 0;
             Network.Run(new List<double> { left, right });
-            NetworkHelper.ToTreeView(treeView1, Network);
+            if (this.updateTreeCheckBox.Checked)
+            {
+                NetworkHelper.ToTreeView(treeView1, Network);
+            }
             RedrawPictureBox(pictureBox1);
         }
 
@@ -85,15 +89,20 @@ namespace NeuralNetwork
         private void Test()
         {
             var inputList = TrainData.ToNetworkFormat().Select(x => x.input).ToList();
-            var pictureBoxes = new List<PictureBox>() {pictureBox1, pictureBox2, pictureBox3, pictureBox4};
+            var pictureBoxes = new List<PictureBox>() { pictureBox1, pictureBox2, pictureBox3, pictureBox4 };
+            if (updateTreeCheckBox.Checked)
+            {
+                NetworkHelper.ToTreeView(treeView1, Network);
+            }
             foreach (var (input, box) in inputList.Zip(pictureBoxes, (input, box) => (input, box)))
             {
                 Network.Run(input);
                 RedrawPictureBox(box);
             }
+
         }
 
-        private void RedrawPictureBox(PictureBox pictureBox) => NetworkHelper.ToPictureBox(pictureBox, Network, pictureBox.Width / 2, 50);
+        private void RedrawPictureBox(PictureBox pictureBox) => NetworkHelper.ToPictureBox(pictureBox, Network, pictureBox.Width / 2, 10);
 
         private void DisableControls()
         {
@@ -119,9 +128,9 @@ namespace NeuralNetwork
         {
             DisableControls();
             TrainButton.Enabled = false;
-            
+
             var watch = Stopwatch.StartNew();
-            
+
             await Task.Run(() => Driver.Train());
             RunForward();
 
@@ -132,7 +141,7 @@ namespace NeuralNetwork
             EnableControls();
             TrainButton.Enabled = true;
         }
-        
+
         private void ResetButton_Click(object sender, EventArgs e)
         {
             ResetNetworkAndRun();
