@@ -7,7 +7,7 @@ namespace NeuralNetwork.Engine.Layers
 {
     public class InputLayer : Layer
     {
-        public InputLayer(LayerHyperParameters layerHyperParameters, Network network) : base(layerHyperParameters, network)
+        public InputLayer(LayerSettings layerSettings, Network network) : base(layerSettings, network)
         {
         }
 

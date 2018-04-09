@@ -7,8 +7,8 @@ namespace NeuralNetwork.Engine.Layers
 {
     public class OutputLayer : Layer
     {
-        public OutputLayer(LayerHyperParameters layerHyperParameters, Network network, Layer prevLayer)
-            : base(layerHyperParameters, network, prevLayer)
+        public OutputLayer(LayerSettings layerSettings, Network network, Layer prevLayer)
+            : base(layerSettings, network, prevLayer)
         {
             InitNeuronsWeights();
         }

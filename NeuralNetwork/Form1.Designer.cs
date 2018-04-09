@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.RunButton = new System.Windows.Forms.Button();
+            this.TestButton = new System.Windows.Forms.Button();
             this.TrainButton = new System.Windows.Forms.Button();
             this.treeView1 = new System.Windows.Forms.TreeView();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
@@ -39,30 +39,29 @@
             this.driverComboBox = new System.Windows.Forms.ComboBox();
             this.learningRateTextBox = new System.Windows.Forms.TextBox();
             this.trainLoopsTextBox = new System.Windows.Forms.TextBox();
-            this.trainDataGridView = new System.Windows.Forms.DataGridView();
             this.layerDataGridView = new System.Windows.Forms.DataGridView();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.pictureBox3 = new System.Windows.Forms.PictureBox();
             this.pictureBox4 = new System.Windows.Forms.PictureBox();
             this.updateTreeCheckBox = new System.Windows.Forms.CheckBox();
-            this.dropOutTextBox = new System.Windows.Forms.TextBox();
+            this.dropoutTextBox = new System.Windows.Forms.TextBox();
+            this.StopButton = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.trainDataGridView)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layerDataGridView)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).BeginInit();
             this.SuspendLayout();
             // 
-            // RunButton
+            // TestButton
             // 
-            this.RunButton.Location = new System.Drawing.Point(13, 33);
-            this.RunButton.Name = "RunButton";
-            this.RunButton.Size = new System.Drawing.Size(75, 23);
-            this.RunButton.TabIndex = 0;
-            this.RunButton.Text = "Run";
-            this.RunButton.UseVisualStyleBackColor = true;
-            this.RunButton.Click += new System.EventHandler(this.RunButton_Click);
+            this.TestButton.Location = new System.Drawing.Point(13, 33);
+            this.TestButton.Name = "TestButton";
+            this.TestButton.Size = new System.Drawing.Size(75, 23);
+            this.TestButton.TabIndex = 0;
+            this.TestButton.Text = "Run";
+            this.TestButton.UseVisualStyleBackColor = true;
+            this.TestButton.Click += new System.EventHandler(this.TestButton_Click);
             // 
             // TrainButton
             // 
@@ -146,14 +145,6 @@
             this.trainLoopsTextBox.Size = new System.Drawing.Size(100, 20);
             this.trainLoopsTextBox.TabIndex = 11;
             // 
-            // trainDataGridView
-            // 
-            this.trainDataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.trainDataGridView.Location = new System.Drawing.Point(789, 33);
-            this.trainDataGridView.Name = "trainDataGridView";
-            this.trainDataGridView.Size = new System.Drawing.Size(398, 144);
-            this.trainDataGridView.TabIndex = 14;
-            // 
             // layerDataGridView
             // 
             this.layerDataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
@@ -198,25 +189,35 @@
             this.updateTreeCheckBox.Text = "update tree";
             this.updateTreeCheckBox.UseVisualStyleBackColor = true;
             // 
-            // dropOutTextBox
+            // dropoutTextBox
             // 
-            this.dropOutTextBox.Location = new System.Drawing.Point(372, 94);
-            this.dropOutTextBox.Name = "dropOutTextBox";
-            this.dropOutTextBox.Size = new System.Drawing.Size(100, 20);
-            this.dropOutTextBox.TabIndex = 20;
+            this.dropoutTextBox.Location = new System.Drawing.Point(372, 94);
+            this.dropoutTextBox.Name = "dropoutTextBox";
+            this.dropoutTextBox.Size = new System.Drawing.Size(100, 20);
+            this.dropoutTextBox.TabIndex = 20;
+            // 
+            // StopButton
+            // 
+            this.StopButton.Location = new System.Drawing.Point(13, 122);
+            this.StopButton.Name = "StopButton";
+            this.StopButton.Size = new System.Drawing.Size(75, 23);
+            this.StopButton.TabIndex = 21;
+            this.StopButton.Text = "Stop";
+            this.StopButton.UseVisualStyleBackColor = true;
+            this.StopButton.Click += new System.EventHandler(this.StopButton_Click);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1294, 866);
-            this.Controls.Add(this.dropOutTextBox);
+            this.Controls.Add(this.StopButton);
+            this.Controls.Add(this.dropoutTextBox);
             this.Controls.Add(this.updateTreeCheckBox);
             this.Controls.Add(this.pictureBox4);
             this.Controls.Add(this.pictureBox3);
             this.Controls.Add(this.pictureBox2);
             this.Controls.Add(this.layerDataGridView);
-            this.Controls.Add(this.trainDataGridView);
             this.Controls.Add(this.trainLoopsTextBox);
             this.Controls.Add(this.learningRateTextBox);
             this.Controls.Add(this.driverComboBox);
@@ -227,12 +228,11 @@
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.treeView1);
             this.Controls.Add(this.TrainButton);
-            this.Controls.Add(this.RunButton);
+            this.Controls.Add(this.TestButton);
             this.Name = "Form1";
             this.Text = "Form1";
             this.Load += new System.EventHandler(this.Form1_Load);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.trainDataGridView)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layerDataGridView)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).EndInit();
@@ -244,7 +244,7 @@
 
         #endregion
 
-        private System.Windows.Forms.Button RunButton;
+        private System.Windows.Forms.Button TestButton;
         private System.Windows.Forms.Button TrainButton;
         private System.Windows.Forms.TreeView treeView1;
         private System.Windows.Forms.PictureBox pictureBox1;
@@ -255,13 +255,13 @@
         private System.Windows.Forms.ComboBox driverComboBox;
         private System.Windows.Forms.TextBox learningRateTextBox;
         private System.Windows.Forms.TextBox trainLoopsTextBox;
-        private System.Windows.Forms.DataGridView trainDataGridView;
         private System.Windows.Forms.DataGridView layerDataGridView;
         private System.Windows.Forms.PictureBox pictureBox2;
         private System.Windows.Forms.PictureBox pictureBox3;
         private System.Windows.Forms.PictureBox pictureBox4;
         private System.Windows.Forms.CheckBox updateTreeCheckBox;
-        private System.Windows.Forms.TextBox dropOutTextBox;
+        private System.Windows.Forms.TextBox dropoutTextBox;
+        private System.Windows.Forms.Button StopButton;
     }
 }
 

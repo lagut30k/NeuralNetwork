@@ -1,93 +1,69 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Windows.Forms;
 using NeuralNetwork.Engine;
-using NeuralNetwork.UI.Options;
+using NeuralNetwork.UI.Providers;
+using NeuralNetwork.UI.Providers.Data;
+using NeuralNetwork.UI.Providers.Settings;
 
 namespace NeuralNetwork.UI.Drivers
 {
     public class Driver
     {
-        private readonly TextBox learningRateTextBox;
-        private readonly TextBox trainLoopsTextBox;
-        private readonly TextBox dropoutTextBox;
-        private readonly TrainData trainData;
-        private readonly LayersData layersData;
+        private readonly ISettingsProvider settingsProvider;
+        private readonly Func<IDataProvider> getDataProvider;
+        private bool stopFlag;
 
         public event EventHandler ReadyToRun;
 
-        public Driver(HyperParameters networkHyperParameters, TextBox dropoutTextBox)
+        public Driver(ISettingsProvider settingsProvider, Func<IDataProvider> getDataProvider)
         {
-            this.dropoutTextBox = dropoutTextBox;
-            Network = new Network(networkHyperParameters);
-        }
-
-        public Driver(TextBox learningRateTextBox, TextBox trainLoopsTextBox, TextBox dropoutTextBox, TrainData trainData, LayersData layersData)
-        {
-            this.learningRateTextBox = learningRateTextBox;
-            this.trainLoopsTextBox = trainLoopsTextBox;
-            this.trainData = trainData;
-            this.layersData = layersData;
-            this.dropoutTextBox = dropoutTextBox;
-
+            this.settingsProvider = settingsProvider;
+            this.getDataProvider = getDataProvider;
+            settingsProvider.LayersSettingsChanged += (sender, args) => ResetNetwork();
             ResetNetwork();
         }
 
         public void ResetNetwork()
         {
-            Network = new Network(GetHyperParameters());
-        }
-
-        private void UpdateNetworkHyperParameters()
-        {
-            var parameters = GetHyperParameters();
-            Moment = parameters.Moment;
-            LearningRate = parameters.LearningRate;
-            Network.DropoutProbability = double.TryParse(dropoutTextBox.Text, out var lr) ? lr : 0;
-        }
-
-        private HyperParameters GetHyperParameters()
-        {
-            return new HyperParameters
+            var settings = new NetworkSettings
             {
-                LearningRate = double.TryParse(learningRateTextBox.Text, out var lr) ? lr : 0.07,
-                Moment = 1,
-                LayersHyperParameters = layersData.Data
+                LearningRate = settingsProvider.LearningRate,
+                Moment = settingsProvider.Moment,
+                LayersSettings = settingsProvider.LayersSettings
             };
+            Network = new Network(settings);
         }
 
         public Network Network { get; private set; }
 
-        public double Moment
-        {
-            get => Network.Moment;
-            set => Network.Moment = value;
-        }
 
-        public double LearningRate
+        private void UpdateNetworkHyperParameters()
         {
-            get => Network.LearningRate;
-            set => Network.LearningRate = value;
+            Network.Moment = settingsProvider.Moment;
+            Network.LearningRate = settingsProvider.LearningRate;
+            Network.DropoutProbability = settingsProvider.DropoutProbability;
         }
-
-        public List<(List<double>, List<double>)> TrainData { get; set; }
 
         public void Train()
         {
-            var trainLoops = int.TryParse(trainLoopsTextBox.Text, out var tr) ? tr : 100000;
-            var data = trainData.ToNetworkFormat();
+            stopFlag = false;
+            var dataProvider = getDataProvider();
+            var trainLoops = settingsProvider.TrainLoops;
             UpdateNetworkHyperParameters();
-            for (int i = 0; i < trainLoops; i++)
+            for (var i = 0; i < trainLoops && !stopFlag; i++)
             {
-                foreach (var (input, output) in data)
-                {
-                    Network.Train(input, output);
-                }
-                if (i % 100 == 0)
+                var data = dataProvider.GetTrainData();
+                Network.Train(data.Input, data.Output);
+                if (i % 200 == 0)
                 {
                     ReadyToRun?.Invoke(this, null);
                 }
             }
+        }
+
+        public void Stop()
+        {
+            stopFlag = true;
         }
     }
 }

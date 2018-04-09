@@ -32,7 +32,7 @@ namespace NeuralNetwork.Engine
 
         private static double GaussRandom(double variance) => Enumerable.Repeat(0, 12).Sum(_ => R.NextDouble() - 0.5) * Math.Sqrt(variance);
 
-        public Network(double learningRate, double moment, List<LayerHyperParameters> layersHyperParameters)
+        private Network(double learningRate, double moment, List<LayerSettings> layersHyperParameters)
         {
             if (layersHyperParameters.Count < 2) return;
 
@@ -48,11 +48,11 @@ namespace NeuralNetwork.Engine
             Layers.Add(new OutputLayer(layersHyperParameters.Last(), this, Layers.Last()));
         }
 
-        public Network(HyperParameters hyperParameters) 
+        public Network(NetworkSettings networkSettings) 
             : this(
-                hyperParameters.LearningRate, 
-                hyperParameters.Moment,
-                hyperParameters.LayersHyperParameters)
+                networkSettings.LearningRate, 
+                networkSettings.Moment,
+                networkSettings.LayersSettings)
         {
         }
 

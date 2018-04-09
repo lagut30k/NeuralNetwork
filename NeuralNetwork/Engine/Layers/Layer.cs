@@ -39,12 +39,12 @@ namespace NeuralNetwork.Engine.Layers
             }
         }
 
-        protected Layer(LayerHyperParameters layerHyperParameters, Network network, Layer previousLayer = null)
+        protected Layer(LayerSettings layerSettings, Network network, Layer previousLayer = null)
         {
             Network = network;
-            HasBias = layerHyperParameters.HasBias;
+            HasBias = layerSettings.HasBias;
             PreviousLayer = previousLayer;
-            Neurons = Enumerable.Range(0, layerHyperParameters.NeuronsCount)
+            Neurons = Enumerable.Range(0, layerSettings.NeuronsCount)
                 .Select(NeuronFactory)
                 .ToList();
 

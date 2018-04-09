@@ -4,8 +4,8 @@ namespace NeuralNetwork.Engine.Layers
 {
     public class HiddenLayer : Layer
     {
-        public HiddenLayer(LayerHyperParameters layerHyperParameters, Network network, Layer prevLayer) 
-            : base(layerHyperParameters, network, prevLayer)
+        public HiddenLayer(LayerSettings layerSettings, Network network, Layer prevLayer) 
+            : base(layerSettings, network, prevLayer)
         {
         }
 
