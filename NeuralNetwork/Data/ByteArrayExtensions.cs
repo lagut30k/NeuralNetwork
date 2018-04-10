@@ -19,6 +19,8 @@ namespace NeuralNetwork.Data
             return BitConverter.ToInt32(byteArray, startIndex);
         }
 
+        public static List<double> ToDoubles(this byte[] byteArray) => byteArray.Select(x => x / 255D).ToList();
+
         public static Image ToImage(this byte[] pixels, int width, int height) => 
             FillWithFakeBytes(pixels).ImageFromRawBgraArray(width, height, PixelFormat.Format24bppRgb);
 
@@ -70,7 +72,5 @@ namespace NeuralNetwork.Data
             output.UnlockBits(bmpData);
             return output;
         }
-
-        
     }
 }

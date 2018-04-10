@@ -49,7 +49,6 @@ namespace NeuralNetwork
             dropoutTextBox.Text = 0.1.ToString(CultureInfo.CurrentCulture);
 
             Test();
-            MnistLoader.LoadData(pictureBox1);
         }
 
         private void Test()
@@ -66,10 +65,12 @@ namespace NeuralNetwork
             {
                 NetworkHelper.ToTreeView(treeView1, Network);
             }
+            var i = 0;
             foreach (var (input, box) in inputList.Zip(pictureBoxes, (data, box) => (data.Input, box)))
             {
                 Network.Run(input);
                 RedrawPictureBox(box);
+                Mnist.DrawTest(box, i++);
             }
         }
 

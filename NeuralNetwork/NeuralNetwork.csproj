@@ -68,7 +68,6 @@
   <ItemGroup>
     <Compile Include="Data\ByteArrayExtensions.cs" />
     <Compile Include="Data\Mnist.cs" />
-    <Compile Include="Data\MnistLoader.cs" />
     <Compile Include="Engine\NetworkSettings.cs" />
     <Compile Include="Engine\LayerSettings.cs" />
     <Compile Include="UI\Drivers\Driver.cs" />
@@ -91,6 +90,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UI\Providers\Data\IDataProvider.cs" />
+    <Compile Include="UI\Providers\Data\MnistDataProvider.cs" />
     <Compile Include="UI\Providers\Settings\ISettingsProvider.cs" />
     <Compile Include="UI\Providers\Data\LogicalOperationDataProvider.cs" />
     <Compile Include="UI\Providers\Data\LogicalOperatorComboBoxItem.cs" />

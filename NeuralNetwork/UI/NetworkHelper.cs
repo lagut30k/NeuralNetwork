@@ -116,36 +116,37 @@ namespace NeuralNetwork.UI
             int fontSize = 10;
 
             Bitmap b = new Bitmap(p.Width, p.Height);
-            Graphics g = Graphics.FromImage(b);
-
-            g.FillRectangle(Brushes.White, g.ClipBounds);
-
-            int y = Y;
-
-            for (int l = 0; l < nn.Layers.Count; l++)
+            using (Graphics g = Graphics.FromImage(b))
             {
-                Layer layer = nn.Layers[l];
+                g.FillRectangle(Brushes.White, g.ClipBounds);
 
-                int x = X - (neuronDistance * (layer.Neurons.Count / 2));
+                int y = Y;
 
-                for (int n = 0; n < layer.Neurons.Count; n++)
+                for (int l = 0; l < nn.Layers.Count; l++)
                 {
-                    Neuron neuron = layer.Neurons[n];
+                    Layer layer = nn.Layers[l];
 
-                    //for (int d = 0; d < neuron.Dendrites.Count; d++)
-                    //{
-                    //    // TO DO: optionally draw dendrites between neurons 
-                    //};
-                    if (x > -20 && x < p.Width + 20)
+                    int x = X - (neuronDistance * (layer.Neurons.Count / 2));
+
+                    for (int n = 0; n < layer.Neurons.Count; n++)
                     {
-                        g.FillEllipse(Brushes.WhiteSmoke, x, y, neuronWidth, neuronWidth);
-                        g.DrawEllipse(Pens.Gray, x, y, neuronWidth, neuronWidth);
-                        g.DrawString(neuron.Value.ToString("0.00"), new Font("Arial", fontSize), Brushes.Black, x + 5, y + (neuronWidth / 2) - 6);
-                    }
-                    x += neuronDistance;
-                }
+                        Neuron neuron = layer.Neurons[n];
 
-                y += layerDistance;
+                        //for (int d = 0; d < neuron.Dendrites.Count; d++)
+                        //{
+                        //    // TO DO: optionally draw dendrites between neurons 
+                        //};
+                        if (x > -20 && x < p.Width + 20)
+                        {
+                            g.FillEllipse(Brushes.WhiteSmoke, x, y, neuronWidth, neuronWidth);
+                            g.DrawEllipse(Pens.Gray, x, y, neuronWidth, neuronWidth);
+                            g.DrawString(neuron.Value.ToString("0.00"), new Font("Arial", fontSize), Brushes.Black, x + 5, y + (neuronWidth / 2) - 6);
+                        }
+                        x += neuronDistance;
+                    }
+
+                    y += layerDistance;
+                }
             }
 
             p.Image = b;
