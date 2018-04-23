@@ -46,6 +46,7 @@
             this.updateTreeCheckBox = new System.Windows.Forms.CheckBox();
             this.dropoutTextBox = new System.Windows.Forms.TextBox();
             this.StopButton = new System.Windows.Forms.Button();
+            this.dataComboBox = new System.Windows.Forms.ComboBox();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layerDataGridView)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
@@ -82,9 +83,9 @@
             // 
             // pictureBox1
             // 
-            this.pictureBox1.Location = new System.Drawing.Point(495, 211);
+            this.pictureBox1.Location = new System.Drawing.Point(298, 211);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(271, 295);
+            this.pictureBox1.Size = new System.Drawing.Size(500, 300);
             this.pictureBox1.TabIndex = 3;
             this.pictureBox1.TabStop = false;
             // 
@@ -106,7 +107,7 @@
             // 
             this.elapsedLabel.AutoSize = true;
             this.elapsedLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.elapsedLabel.Location = new System.Drawing.Point(114, 153);
+            this.elapsedLabel.Location = new System.Drawing.Point(36, 153);
             this.elapsedLabel.Name = "elapsedLabel";
             this.elapsedLabel.Size = new System.Drawing.Size(20, 24);
             this.elapsedLabel.TabIndex = 7;
@@ -155,33 +156,31 @@
             // 
             // pictureBox2
             // 
-            this.pictureBox2.Location = new System.Drawing.Point(789, 211);
+            this.pictureBox2.Location = new System.Drawing.Point(820, 211);
             this.pictureBox2.Name = "pictureBox2";
-            this.pictureBox2.Size = new System.Drawing.Size(237, 295);
+            this.pictureBox2.Size = new System.Drawing.Size(500, 295);
             this.pictureBox2.TabIndex = 16;
             this.pictureBox2.TabStop = false;
             // 
             // pictureBox3
             // 
-            this.pictureBox3.Location = new System.Drawing.Point(495, 535);
+            this.pictureBox3.Location = new System.Drawing.Point(298, 535);
             this.pictureBox3.Name = "pictureBox3";
-            this.pictureBox3.Size = new System.Drawing.Size(271, 302);
+            this.pictureBox3.Size = new System.Drawing.Size(500, 302);
             this.pictureBox3.TabIndex = 17;
             this.pictureBox3.TabStop = false;
             // 
             // pictureBox4
             // 
-            this.pictureBox4.Location = new System.Drawing.Point(789, 535);
+            this.pictureBox4.Location = new System.Drawing.Point(820, 535);
             this.pictureBox4.Name = "pictureBox4";
-            this.pictureBox4.Size = new System.Drawing.Size(237, 295);
+            this.pictureBox4.Size = new System.Drawing.Size(500, 302);
             this.pictureBox4.TabIndex = 18;
             this.pictureBox4.TabStop = false;
             // 
             // updateTreeCheckBox
             // 
             this.updateTreeCheckBox.AutoSize = true;
-            this.updateTreeCheckBox.Checked = true;
-            this.updateTreeCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
             this.updateTreeCheckBox.Location = new System.Drawing.Point(13, 188);
             this.updateTreeCheckBox.Name = "updateTreeCheckBox";
             this.updateTreeCheckBox.Size = new System.Drawing.Size(80, 17);
@@ -206,11 +205,22 @@
             this.StopButton.UseVisualStyleBackColor = true;
             this.StopButton.Click += new System.EventHandler(this.StopButton_Click);
             // 
+            // dataComboBox
+            // 
+            this.dataComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.dataComboBox.FormattingEnabled = true;
+            this.dataComboBox.Location = new System.Drawing.Point(166, 153);
+            this.dataComboBox.Name = "dataComboBox";
+            this.dataComboBox.Size = new System.Drawing.Size(160, 21);
+            this.dataComboBox.TabIndex = 22;
+            this.dataComboBox.SelectedIndexChanged += new System.EventHandler(this.dataComboBox_SelectedIndexChanged);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1294, 866);
+            this.ClientSize = new System.Drawing.Size(1353, 866);
+            this.Controls.Add(this.dataComboBox);
             this.Controls.Add(this.StopButton);
             this.Controls.Add(this.dropoutTextBox);
             this.Controls.Add(this.updateTreeCheckBox);
@@ -262,6 +272,7 @@
         private System.Windows.Forms.CheckBox updateTreeCheckBox;
         private System.Windows.Forms.TextBox dropoutTextBox;
         private System.Windows.Forms.Button StopButton;
+        private System.Windows.Forms.ComboBox dataComboBox;
     }
 }
 

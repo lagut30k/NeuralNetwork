@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using NeuralNetwork.Data;
+using NeuralNetwork.UI.Drawers;
 
 namespace NeuralNetwork.UI.Providers.Data
 {
@@ -18,10 +19,10 @@ namespace NeuralNetwork.UI.Providers.Data
         public List<List<double>> TrainOutputs =
             Mnist.TrainLabels.Select(x => Enumerable.Range(0, 10).Select(y => y == x ? 1D : 0D).ToList()).ToList();
 
+        public List<List<double>> TestInputs = Mnist.TestImages.Select(x => x.ToDoubles()).ToList();
+
         public List<List<double>> TestOutputs =
             Mnist.TestLabels.Select(x => Enumerable.Range(0, 10).Select(y => y == x ? 1D : 0D).ToList()).ToList();
-
-        public List<List<double>> TestInputs = Mnist.TestImages.Select(x => x.ToDoubles()).ToList();
 
         public NetworkData GetTrainData()
         {
@@ -34,5 +35,7 @@ namespace NeuralNetwork.UI.Providers.Data
             var index = R.Next(TestInputs.Count);
             return new NetworkData(TestInputs[index], TestOutputs[index]);
         }
+
+        public IDrawer ResultDrawingFactory(List<double> input, List<double> expected, List<double> actual) => new MnistDrawer(input, expected, actual);
     }
 }

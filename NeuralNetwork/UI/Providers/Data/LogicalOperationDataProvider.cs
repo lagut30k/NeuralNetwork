@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
+using NeuralNetwork.UI.Drawers;
 
 namespace NeuralNetwork.UI.Providers.Data
 {
@@ -56,5 +57,7 @@ namespace NeuralNetwork.UI.Providers.Data
             };
             return new NetworkData(input, output);
         }
+
+        public IDrawer ResultDrawingFactory(List<double> input, List<double> expected, List<double> actual) => new LogicalDrawer(input, expected, actual);
     }
 }

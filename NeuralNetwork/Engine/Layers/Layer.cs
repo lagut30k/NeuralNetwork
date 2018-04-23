@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Threading.Tasks;
 using NeuralNetwork.Engine.Neurons;
 
@@ -8,6 +10,8 @@ namespace NeuralNetwork.Engine.Layers
     public abstract class Layer
     {
         private Layer nextLayer;
+
+        private static readonly RNGCryptoServiceProvider rngCsp = new RNGCryptoServiceProvider();
 
         public List<Neuron> Neurons { get; set; }
 
@@ -56,21 +60,20 @@ namespace NeuralNetwork.Engine.Layers
 
         public void Dropout()
         {
-            foreach (var neuron in Neurons)
+            Parallel.ForEach(Neurons, neuron =>
             {
-                if (Network.R.NextDouble() < Network.DropoutProbability)
-                {
-                    neuron.Dropped = true;
-                }
-            }
+                var b = new byte[1];
+                rngCsp.GetBytes(b);
+                neuron.Dropped = Convert.ToBoolean(b[0] & 0b1);
+            });
         }
 
         public void ClearDropout()
         {
-            foreach (var neuron in Neurons)
+            Parallel.ForEach(Neurons, neuron =>
             {
                 neuron.Dropped = false;
-            }
+            });
         }
 
         public virtual void Run()
@@ -79,10 +82,6 @@ namespace NeuralNetwork.Engine.Layers
             {
                 neuron.CalcValue();
             });
-            //foreach (var neuron in Neurons)
-            //{
-            //    neuron.CalcValue();
-            //}
         }
 
         public virtual void CalcDelta()
@@ -91,18 +90,56 @@ namespace NeuralNetwork.Engine.Layers
             {
                 neuron.CalcDelta();
             });
-            //foreach (var neuron in Neurons)
-            //{
-            //    neuron.CalcDelta();
-            //}
         }
-
         public void UpdateWeights()
         {
-            foreach (var neuron in Neurons)
+            Parallel.ForEach(Neurons, neuron =>
             {
                 neuron.UpdateWeights();
-            }
+            });
         }
+
+        //public void Dropout()
+        //{
+        //    foreach (var neuron in Neurons)
+        //    {
+        //        if (Network.R.NextDouble() < Network.DropoutProbability)
+        //        {
+        //            neuron.Dropped = true;
+        //        }
+        //    }
+        //}
+
+        //public void ClearDropout()
+        //{
+        //    foreach (var neuron in Neurons)
+        //    {
+        //        neuron.Dropped = false;
+        //    }
+        //}
+
+        //public virtual void Run()
+        //{
+        //    foreach (var neuron in Neurons)
+        //    {
+        //        neuron.CalcValue();
+        //    }
+        //}
+
+        //public virtual void CalcDelta()
+        //{
+        //    foreach (var neuron in Neurons)
+        //    {
+        //        neuron.CalcDelta();
+        //    }
+        //}
+
+        //public void UpdateWeights()
+        //{
+        //    foreach (var neuron in Neurons)
+        //    {
+        //        neuron.UpdateWeights();
+        //    }
+        //}
     }
 }

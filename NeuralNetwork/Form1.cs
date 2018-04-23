@@ -37,9 +37,33 @@ namespace NeuralNetwork
                 );
 
             Driver = new Driver(SettingsProvider, GetDataProvider);
-            DataProvider = new LogicalOperationDataProvider(driverComboBox);
+
+            InitDataProviderComboBox();
+
+            //DataProvider = new LogicalOperationDataProvider(driverComboBox);
 
             Driver.ReadyToRun += (sender, args) => Test();
+        }
+
+        private void InitDataProviderComboBox()
+        {
+
+            dataComboBox.DataSource = new[] {
+                new DataProviderComboBoxItem { Text = "MNIST", Factory = () => new MnistDataProvider() },
+                new DataProviderComboBoxItem { Text = "Logical", Factory = () => new LogicalOperationDataProvider(driverComboBox) }
+            };
+            dataComboBox.DisplayMember = "Text";
+            dataComboBox.SelectedValueChanged += (sender, args) =>
+            {
+                DataProvider = ((DataProviderComboBoxItem) dataComboBox.SelectedItem).Factory();
+                SettingsProvider.LayersSettings.First().NeuronsCount = DataProvider.InputNeuronsCount;
+                SettingsProvider.LayersSettings.Last().NeuronsCount = DataProvider.OutputNeuronsCount;
+                layerDataGridView.Refresh();
+                //layerDataGridView.DataSource = layerDataGridView.DataSource;
+            };
+            DataProvider = ((DataProviderComboBoxItem)dataComboBox.SelectedItem).Factory();
+            SettingsProvider.LayersSettings.First().NeuronsCount = DataProvider.InputNeuronsCount;
+            SettingsProvider.LayersSettings.Last().NeuronsCount = DataProvider.OutputNeuronsCount;
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -66,11 +90,18 @@ namespace NeuralNetwork
                 NetworkHelper.ToTreeView(treeView1, Network);
             }
             var i = 0;
-            foreach (var (input, box) in inputList.Zip(pictureBoxes, (data, box) => (data.Input, box)))
+            foreach (var (data, box) in inputList.Zip(pictureBoxes, (data, box) => (data, box)))
             {
-                Network.Run(input);
+                var actual = Network.Run(data.Input);
                 RedrawPictureBox(box);
-                Mnist.DrawTest(box, i++);
+                if (actual == null)
+                {
+                    continue;
+                }
+                var drawer = DataProvider.ResultDrawingFactory(data.Input, data.Output, actual);
+                drawer.Draw(box);
+
+                //Mnist.DrawTest(box, i++);
             }
         }
 
@@ -123,5 +154,10 @@ namespace NeuralNetwork
         }
 
         private void StopButton_Click(object sender, EventArgs e) => Driver.Stop();
+
+        private void dataComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            DataProvider = new LogicalOperationDataProvider(driverComboBox);
+        }
     }
 }

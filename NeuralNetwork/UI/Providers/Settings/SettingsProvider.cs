@@ -25,9 +25,9 @@ namespace NeuralNetwork.UI.Providers.Settings
 
         public List<LayerSettings> LayersSettings { get; } = new List<LayerSettings>
         {
-            new LayerSettings {NeuronsCount = 2, HasBias = false},
-            new LayerSettings {NeuronsCount = 4, HasBias = true},
-            new LayerSettings {NeuronsCount = 2, HasBias = true},
+            new LayerSettings {NeuronsCount = 784, HasBias = false},
+            new LayerSettings {NeuronsCount = 300, HasBias = true},
+            new LayerSettings {NeuronsCount = 10, HasBias = true},
         };
 
         public double LearningRate => double.TryParse(learningRateTextBox.Text, out var lr) ? lr : 0.07;

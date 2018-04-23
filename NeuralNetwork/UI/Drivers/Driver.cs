@@ -54,7 +54,7 @@ namespace NeuralNetwork.UI.Drivers
             {
                 var data = dataProvider.GetTrainData();
                 Network.Train(data.Input, data.Output);
-                if (i % 200 == 0)
+                if (i % 1000 == 0)
                 {
                     ReadyToRun?.Invoke(this, null);
                 }

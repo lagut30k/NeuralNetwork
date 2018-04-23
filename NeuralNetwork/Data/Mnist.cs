@@ -59,29 +59,5 @@ namespace NeuralNetwork.Data
             }
             return byteImages;
         }
-
-        private static void Draw(PictureBox p, byte[] imageBytes, byte label)
-        {
-            using (var image = imageBytes.ToImage(Width, Height))
-            using (var g = Graphics.FromImage(p.Image))
-            {
-                g.DrawImage(image, 0, 0);
-                g.DrawString(label.ToString(), new Font("Arial", 20), Brushes.Black, p.Width - 20 , 0);
-            }
-        }
-
-        public static void DrawTrain(PictureBox p, int index)
-        {
-            var imageBytes = TrainImages[index];
-            var label = TrainLabels[index];
-            Draw(p, imageBytes, label);
-        }
-
-        public static void DrawTest(PictureBox p, int index)
-        {
-            var imageBytes = TestImages[index];
-            var label = TestLabels[index];
-            Draw(p, imageBytes, label);
-        }
     }
 }
