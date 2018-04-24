@@ -15,6 +15,8 @@ namespace NeuralNetwork.UI.Drivers
 
         public event EventHandler ReadyToRun;
 
+        public event EventHandler ReadyToFullTest;
+
         public Driver(ISettingsProvider settingsProvider, Func<IDataProvider> getDataProvider)
         {
             this.settingsProvider = settingsProvider;
@@ -57,6 +59,10 @@ namespace NeuralNetwork.UI.Drivers
                 if (i % 1000 == 0)
                 {
                     ReadyToRun?.Invoke(this, null);
+                }
+                if ((i+1) % 10000 == 0)
+                {
+                    ReadyToFullTest?.Invoke(this, null);
                 }
             }
         }

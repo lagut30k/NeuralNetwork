@@ -47,6 +47,9 @@
             this.dropoutTextBox = new System.Windows.Forms.TextBox();
             this.StopButton = new System.Windows.Forms.Button();
             this.dataComboBox = new System.Windows.Forms.ComboBox();
+            this.classificationErrorLabel = new System.Windows.Forms.Label();
+            this.meanSquaredErrorLabel = new System.Windows.Forms.Label();
+            this.crossEntropyErrorLabel = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layerDataGridView)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
@@ -215,11 +218,41 @@
             this.dataComboBox.TabIndex = 22;
             this.dataComboBox.SelectedIndexChanged += new System.EventHandler(this.dataComboBox_SelectedIndexChanged);
             // 
+            // classificationErrorLabel
+            // 
+            this.classificationErrorLabel.AutoSize = true;
+            this.classificationErrorLabel.Location = new System.Drawing.Point(959, 38);
+            this.classificationErrorLabel.Name = "classificationErrorLabel";
+            this.classificationErrorLabel.Size = new System.Drawing.Size(93, 13);
+            this.classificationErrorLabel.TabIndex = 23;
+            this.classificationErrorLabel.Text = "Classification Error";
+            // 
+            // meanSquaredErrorLabel
+            // 
+            this.meanSquaredErrorLabel.AutoSize = true;
+            this.meanSquaredErrorLabel.Location = new System.Drawing.Point(959, 83);
+            this.meanSquaredErrorLabel.Name = "meanSquaredErrorLabel";
+            this.meanSquaredErrorLabel.Size = new System.Drawing.Size(102, 13);
+            this.meanSquaredErrorLabel.TabIndex = 24;
+            this.meanSquaredErrorLabel.Text = "Mean Squared Error";
+            // 
+            // crossEntropyErrorLabel
+            // 
+            this.crossEntropyErrorLabel.AutoSize = true;
+            this.crossEntropyErrorLabel.Location = new System.Drawing.Point(959, 132);
+            this.crossEntropyErrorLabel.Name = "crossEntropyErrorLabel";
+            this.crossEntropyErrorLabel.Size = new System.Drawing.Size(96, 13);
+            this.crossEntropyErrorLabel.TabIndex = 25;
+            this.crossEntropyErrorLabel.Text = "Cross-entropy Error";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1353, 866);
+            this.Controls.Add(this.crossEntropyErrorLabel);
+            this.Controls.Add(this.meanSquaredErrorLabel);
+            this.Controls.Add(this.classificationErrorLabel);
             this.Controls.Add(this.dataComboBox);
             this.Controls.Add(this.StopButton);
             this.Controls.Add(this.dropoutTextBox);
@@ -273,6 +306,9 @@
         private System.Windows.Forms.TextBox dropoutTextBox;
         private System.Windows.Forms.Button StopButton;
         private System.Windows.Forms.ComboBox dataComboBox;
+        private System.Windows.Forms.Label classificationErrorLabel;
+        private System.Windows.Forms.Label meanSquaredErrorLabel;
+        private System.Windows.Forms.Label crossEntropyErrorLabel;
     }
 }
 

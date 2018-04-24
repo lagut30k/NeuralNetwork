@@ -13,6 +13,14 @@ namespace NeuralNetwork.UI.Providers.Data
 
         NetworkData GetTestData();
 
+        IEnumerable<NetworkData> GetAllTestData();
+
         IDrawer ResultDrawingFactory(List<double> input, List<double> expected, List<double> actual);
+
+        bool ValidateResult(List<double> expected, List<double> actual);
+
+        double Mse(List<double> expected, List<double> actual);
+
+        double CrossEntropy(List<double> expected, List<double> actual);
     }
 }

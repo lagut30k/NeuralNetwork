@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Windows.Forms;
 using NeuralNetwork.UI.Drawers;
 
@@ -40,6 +41,25 @@ namespace NeuralNetwork.UI.Providers.Data
 
         public NetworkData GetTestData() => IntToNetworkData(internalVal++);
 
+        public IEnumerable<NetworkData> GetAllTestData()
+        {
+            return new[] {0, 1, 2, 3}.Select(IntToNetworkData);
+        }
+
+        public bool ValidateResult(List<double> expected, List<double> actual)
+        {
+            return ListToLabel(expected) == ListToLabel(actual);
+        }
+        public double Mse(List<double> expected, List<double> actual)
+        {
+            return expected.Zip(actual, (e, a) => e - a).Sum(x => x * x) / expected.Count;
+        }
+
+        public double CrossEntropy(List<double> expected, List<double> actual)
+        {
+            return expected.Zip(actual, (e, a) => e * Math.Log(a + 1e-12)).Sum(x => -x) / expected.Count;
+        }
+
         private NetworkData IntToNetworkData(int i)
         {
             var left = Convert.ToBoolean(i & 2);
@@ -59,5 +79,11 @@ namespace NeuralNetwork.UI.Providers.Data
         }
 
         public IDrawer ResultDrawingFactory(List<double> input, List<double> expected, List<double> actual) => new LogicalDrawer(input, expected, actual);
+
+        private static int ListToLabel(List<double> list)
+        {
+            var m = list.Max();
+            return list.IndexOf(m);
+        }
     }
 }

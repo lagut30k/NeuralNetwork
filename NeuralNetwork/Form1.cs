@@ -43,6 +43,7 @@ namespace NeuralNetwork
             //DataProvider = new LogicalOperationDataProvider(driverComboBox);
 
             Driver.ReadyToRun += (sender, args) => Test();
+            Driver.ReadyToFullTest += (sender, args) => FullTest();
         }
 
         private void InitDataProviderComboBox()
@@ -55,7 +56,7 @@ namespace NeuralNetwork
             dataComboBox.DisplayMember = "Text";
             dataComboBox.SelectedValueChanged += (sender, args) =>
             {
-                DataProvider = ((DataProviderComboBoxItem) dataComboBox.SelectedItem).Factory();
+                DataProvider = ((DataProviderComboBoxItem)dataComboBox.SelectedItem).Factory();
                 SettingsProvider.LayersSettings.First().NeuronsCount = DataProvider.InputNeuronsCount;
                 SettingsProvider.LayersSettings.Last().NeuronsCount = DataProvider.OutputNeuronsCount;
                 layerDataGridView.Refresh();
@@ -103,6 +104,37 @@ namespace NeuralNetwork
 
                 //Mnist.DrawTest(box, i++);
             }
+        }
+
+        private void FullTest()
+        {
+            var total = 0;
+            var valid = 0;
+            var mse = 0D;
+            var crossEntropy = 0D;
+            foreach (var testData in DataProvider.GetAllTestData())
+            {
+                var actual = Network.Run(testData.Input);
+                if (actual == null)
+                {
+                    return;
+                }
+                mse += DataProvider.Mse(testData.Output, actual);
+                crossEntropy += DataProvider.CrossEntropy(testData.Output, actual);
+                if (DataProvider.ValidateResult(testData.Output, actual))
+                {
+                    valid++;
+                }
+                total++;
+            }
+            var classificationError = ((double)total - valid) / total;
+            mse /= total;
+            crossEntropy /= total;
+
+            classificationErrorLabel.Invoke(new Action(() => classificationErrorLabel.Text = $@"{classificationError * 100:F2}% / {total - valid} / {total}"));
+            meanSquaredErrorLabel.Invoke(new Action(() => meanSquaredErrorLabel.Text = $@"{mse * 100:F2}%"));
+            crossEntropyErrorLabel.Invoke(new Action(() => crossEntropyErrorLabel.Text = $@"{crossEntropy * 100:F2}%"));
+            //testResultLabel.Text = $@"{error * 100:F1} / {total - valid} / {total}";
         }
 
         private void RedrawPictureBox(PictureBox pictureBox) => NetworkHelper.ToPictureBox(pictureBox, Network, pictureBox.Width / 2, 10);

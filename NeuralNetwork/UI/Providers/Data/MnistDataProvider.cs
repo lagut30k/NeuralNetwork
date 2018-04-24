@@ -36,6 +36,29 @@ namespace NeuralNetwork.UI.Providers.Data
             return new NetworkData(TestInputs[index], TestOutputs[index]);
         }
 
+        public IEnumerable<NetworkData> GetAllTestData() => TestInputs.Zip(TestOutputs, (i, o) => new NetworkData(i,o));
+
+        public bool ValidateResult(List<double> expected, List<double> actual)
+        {
+            return ListToLabel(expected) == ListToLabel(actual);
+        }
+
+        public double Mse(List<double> expected, List<double> actual)
+        {
+            return expected.Zip(actual, (e, a) => e - a).Sum(x => x * x) / expected.Count;
+        }
+
+        public double CrossEntropy(List<double> expected, List<double> actual)
+        {
+            return expected.Zip(actual, (e, a) => -e * Math.Log(a + 1e-12)).Sum() / expected.Count;
+        }
+
         public IDrawer ResultDrawingFactory(List<double> input, List<double> expected, List<double> actual) => new MnistDrawer(input, expected, actual);
+
+        private static int ListToLabel(List<double> list)
+        {
+            var m = list.Max();
+            return list.IndexOf(m);
+        }
     }
 }
